@@ -3,3 +3,8 @@
 ################################################################################
 
 /MainWin/x64/Debug
+/MainWin/ImageFilterAlgorithmCPP/x64/Debug
+/MainWin/ImageFilterAlgorithmASM/Debug
+/MainWin/ImageFilterAlgorithmASM/x64/Debug
+/MainWin/MainWin/obj
+/MainWin/.vs/MainWin/v16
