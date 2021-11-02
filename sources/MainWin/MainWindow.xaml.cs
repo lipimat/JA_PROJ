@@ -1,5 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using System.Windows.Media.Imaging;
+
 
 namespace dllFunctions
 {
@@ -20,6 +24,7 @@ namespace MainWin
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string selectedFileName;
         public MainWindow()
         {
             InitializeComponent();
@@ -32,6 +37,25 @@ namespace MainWin
                 textBoxASM.Text = dllFunctions.CDllFunctionHandler.asmProc().ToString();
             }
            textBoxCPP.Text = dllFunctions.CDllFunctionHandler.cppProc().ToString();
+        }
+
+        private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = "c:\\";
+            dlg.Filter = "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*";
+            dlg.RestoreDirectory = true;
+
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                selectedFileName = dlg.FileName;
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(selectedFileName);
+                bitmap.EndInit();
+                ImageViewer1.Source = bitmap;
+                ImageViewer2.Source = bitmap;
+            }
         }
     }
 }
