@@ -1,3 +1,0 @@
-﻿  Assembling ImageFilterAlgorithmDLL.asm...
-LINK : error LNK2001: nierozpoznany symbol zewnętrzny _DllMainCRTStartup
-C:\Users\Werka\Desktop\JA\JA_PROJ\sources\x64\Release\ImageFilterAlgorithmASM.dll : fatal error LNK1120: liczba nierozpoznanych elementów zewnętrznych: 1
