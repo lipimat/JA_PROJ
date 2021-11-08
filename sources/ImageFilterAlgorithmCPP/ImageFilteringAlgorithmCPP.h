@@ -6,4 +6,4 @@
 #define ALGORITHM_API __declspec(dllimport)
 #endif
 
-extern "C" ALGORITHM_API int cppProc();
+extern "C" ALGORITHM_API void cppProc(UINT8 * pixels, int len);

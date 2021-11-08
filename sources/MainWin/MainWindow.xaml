@@ -7,8 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="900" Background="#464b4f">
     <Grid>
-        <TextBox x:Name="textBoxASM" HorizontalAlignment="Left" Height="23" Margin="19,396,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="193"/>
-        <TextBox x:Name="textBoxCPP" HorizontalAlignment="Left" Height="23" Margin="19,469,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="193" RenderTransformOrigin="0.942,6.783"/>
         <Label Content="Original Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="19,3,0,0"/>
         <Button Content="Upload Image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"  Click="BrowseButton_Click" Margin="202,8,575,480"/>
         <Border  Height="300" Width="300" Margin="19,44,575,176" Background="#4e5357">
@@ -19,8 +17,11 @@
             <Image x:Name="ImageViewer2"/>
         </Border>
         <Label Content="Output Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="398,3,0,0"/>
-        <Button Content="RunDLLs" HorizontalAlignment="Left" Margin="249,468,0,0" VerticalAlignment="Top" Width="76" Click="onClickRunDLLs" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" RenderTransformOrigin="2.187,3.958"/>
-        <Label Content="Assembly function output:" HorizontalAlignment="Left" Margin="19,361,0,0" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" RenderTransformOrigin="0.578,5.367"/>
-        <Label Content="C++ function output:" HorizontalAlignment="Left" Margin="19,439,0,0" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold"/>
+        <Button Content="RunDLL" HorizontalAlignment="Left" Margin="291,479,0,0" VerticalAlignment="Top" Width="76" Click="onClickRunDLL" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" RenderTransformOrigin="2.187,3.958"/>
+        <ComboBox x:Name="ComboBox" HorizontalAlignment="Left" Margin="264,441,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="OnComboSelectionChanged">
+            <ComboBoxItem Content="Assembly procedure"/>
+            <ComboBoxItem Content="C++ procedure"/>
+        </ComboBox>
+        <Button Content="Clear image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" HorizontalAlignment="Left" Margin="584,482,0,0" VerticalAlignment="Top" Click="OnClearImage"/>
     </Grid>
 </Window>
