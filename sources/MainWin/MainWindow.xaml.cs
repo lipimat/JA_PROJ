@@ -28,6 +28,7 @@ namespace MainWin
         private string selectedFileName, selectedProcedure;
         private byte[] imageToPixelArray;
         int bitmapStride;
+        int[,] matrix = new int[3,3];
         BitmapImage originalBitmap;
 
         public MainWindow()
@@ -101,6 +102,19 @@ namespace MainWin
                 };
             }
             return true;
+        }
+
+        private void ApplyMatrix(object sender, RoutedEventArgs e)
+        {
+            matrix[0,0] = int.Parse(Matrix00.Text);
+            matrix[0,1] = int.Parse(Matrix01.Text);
+            matrix[0,2] = int.Parse(Matrix02.Text);
+            matrix[1,0] = int.Parse(Matrix10.Text);
+            matrix[1,1] = int.Parse(Matrix11.Text);
+            matrix[1,2] = int.Parse(Matrix12.Text);
+            matrix[2,0] = int.Parse(Matrix20.Text);
+            matrix[2,1] = int.Parse(Matrix21.Text);
+            matrix[2,2] = int.Parse(Matrix22.Text);
         }
 
         private bool runCppProc()

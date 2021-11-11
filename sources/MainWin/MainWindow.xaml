@@ -5,23 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MainWin"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="900" Background="#464b4f">
+        Title="MainWindow" Height="650" Width="1000" Background="#464b4f">
     <Grid>
         <Label Content="Original Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="19,3,0,0"/>
-        <Button Content="Upload Image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"  Click="BrowseButton_Click" Margin="202,8,575,480"/>
-        <Border  Height="300" Width="300" Margin="19,44,575,176" Background="#4e5357">
-            <Image x:Name="ImageViewer1" Height="300" Width="300"/>
+        <Button Content="Upload Image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"  Click="BrowseButton_Click" Margin="247,3,631,606" />
+        <Border  Height="350" Width="350" Background="#4e5357" Margin="19,44,631,240">
+            <Image x:Name="ImageViewer1" Height="350" Width="350"/>
         </Border>
 
         <Border Margin="398,44,43,52" Background="#4e5357">
             <Image x:Name="ImageViewer2"/>
         </Border>
         <Label Content="Output Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="398,3,0,0"/>
-        <Button Content="RunDLL" HorizontalAlignment="Left" Margin="291,479,0,0" VerticalAlignment="Top" Width="76" Click="onClickRunDLL" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" RenderTransformOrigin="2.187,3.958"/>
-        <ComboBox x:Name="ComboBox" HorizontalAlignment="Left" Margin="264,441,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="OnComboSelectionChanged">
+        <Button Content="RunDLL" HorizontalAlignment="Left" Margin="293,558,0,0" VerticalAlignment="Top" Width="76" Click="onClickRunDLL" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"/>
+        <ComboBox x:Name="ComboBox" HorizontalAlignment="Left" Margin="121,558,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="OnComboSelectionChanged" RenderTransformOrigin="0.488,0.708">
             <ComboBoxItem Content="Assembly procedure"/>
             <ComboBoxItem Content="C++ procedure"/>
         </ComboBox>
-        <Button Content="Clear image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" HorizontalAlignment="Left" Margin="584,482,0,0" VerticalAlignment="Top" Click="OnClearImage"/>
+        <Button Content="Clear image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" HorizontalAlignment="Left" Margin="836,6,0,0" VerticalAlignment="Top" Click="OnClearImage" Width="121"/>
+        <Grid Margin="121,413,770,105">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width="30"/>
+                <ColumnDefinition  Width="30"/>
+                <ColumnDefinition  Width="30"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <TextBox Name="Matrix00" Grid.Column="0" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox Name="Matrix01" Grid.Row="1" Grid.Column="0" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox Name="Matrix02" Grid.Row="2" Grid.Column="0"  TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox Name="Matrix10" Grid.Column="1"  TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox Name="Matrix11" Grid.Row="1" Grid.Column="1"  TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox Name="Matrix12" Grid.Row="2" Grid.Column="1" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center" />
+            <TextBox Name="Matrix20" Grid.Column="2" Grid.ColumnSpan="2" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox Name="Matrix21" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center" />
+            <TextBox Name="Matrix22" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+        </Grid>
+        <Button Content="Apply matrix" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ApplyMatrix" Width="122" Margin="247,480,0,0"/>
+
+        <Label Content="Filter matrix" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="19,413,0,0"/>
     </Grid>
 </Window>
