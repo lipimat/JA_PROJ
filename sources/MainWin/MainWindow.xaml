@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MainWin"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="900" Background="#464b4f">
+        Title="MainWindow" Height="700" Width="1000" Background="#464b4f">
     <Grid>
         <Label Content="Original Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="19,3,0,0"/>
-        <Button Content="Upload Image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"  Click="BrowseButton_Click" Margin="202,8,575,480"/>
-        <Border  Height="300" Width="300" Margin="19,44,575,176" Background="#4e5357">
+        <Button Content="Upload Image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"  Click="BrowseButton_Click" Margin="202,6,675,640"/>
+        <Border  Height="300" Width="300" Margin="19,44,775,327" Background="#4e5357">
             <Image x:Name="ImageViewer1" Height="300" Width="300"/>
         </Border>
 
@@ -17,11 +17,32 @@
             <Image x:Name="ImageViewer2"/>
         </Border>
         <Label Content="Output Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="398,3,0,0"/>
-        <Button Content="RunDLL" HorizontalAlignment="Left" Margin="291,479,0,0" VerticalAlignment="Top" Width="76" Click="onClickRunDLL" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" RenderTransformOrigin="2.187,3.958"/>
-        <ComboBox x:Name="ComboBox" HorizontalAlignment="Left" Margin="264,441,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="OnComboSelectionChanged">
-            <ComboBoxItem Content="Assembly procedure"/>
-            <ComboBoxItem Content="C++ procedure"/>
-        </ComboBox>
-        <Button Content="Clear image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" HorizontalAlignment="Left" Margin="584,482,0,0" VerticalAlignment="Top" Click="OnClearImage"/>
+        <Button Content="RunDLL" HorizontalAlignment="Left" Margin="243,601,0,0" VerticalAlignment="Top" Width="76" Click="onClickRunDLL" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" RenderTransformOrigin="2.187,3.958"/>
+        <Button Content="Clear image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" HorizontalAlignment="Left" Margin="202,361,0,0" VerticalAlignment="Top" Click="OnClearImage" Width="117"/>
+        <Grid Margin="134,413,728,114">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width="40"/>
+                <ColumnDefinition  Width="40"/>
+                <ColumnDefinition  Width="40"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="7*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+            <TextBox Grid.Column="0" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Column="1" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Column="2" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2"/>
+
+        </Grid>
+        <Label Content="Filter matrix" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="19,413,0,0" Height="28"/>
     </Grid>
 </Window>
