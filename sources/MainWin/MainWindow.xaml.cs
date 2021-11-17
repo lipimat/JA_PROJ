@@ -96,7 +96,7 @@ namespace MainWin
         {
             unsafe
             {
-                fixed(byte* ptr = &imageToPixelArray[0])
+                fixed(byte* ptr = imageToPixelArray)
                 {
                     dllFunctions.CDllFunctionHandler.asmProc(ptr, imageToPixelArray.Length);
                 };
