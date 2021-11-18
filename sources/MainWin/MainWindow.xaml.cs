@@ -3,8 +3,8 @@ using System.Windows;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
-using System.Drawing;
 using System.Windows.Media;
+using System.Text.RegularExpressions;
 
 namespace dllFunctions
 {
@@ -25,6 +25,7 @@ namespace MainWin
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly Regex _regex = new Regex("[^0-9.-]+");
         private string selectedFileName, selectedProcedure;
         private byte[] imageToPixelArray;
         int bitmapStride;
@@ -106,15 +107,50 @@ namespace MainWin
 
         private void ApplyMatrix(object sender, RoutedEventArgs e)
         {
-            matrix[0,0] = int.Parse(Matrix00.Text);
-            matrix[0,1] = int.Parse(Matrix01.Text);
-            matrix[0,2] = int.Parse(Matrix02.Text);
-            matrix[1,0] = int.Parse(Matrix10.Text);
-            matrix[1,1] = int.Parse(Matrix11.Text);
-            matrix[1,2] = int.Parse(Matrix12.Text);
-            matrix[2,0] = int.Parse(Matrix20.Text);
-            matrix[2,1] = int.Parse(Matrix21.Text);
-            matrix[2,2] = int.Parse(Matrix22.Text);
+            ValidateInputs();
+        }
+
+        private void ValidateInputs()
+        {
+
+            ValidateInput(Matrix00);
+            ValidateInput(Matrix01);
+            ValidateInput(Matrix02);
+            ValidateInput(Matrix10);
+            ValidateInput(Matrix11);
+            ValidateInput(Matrix12);
+            ValidateInput(Matrix20);
+            ValidateInput(Matrix21);
+            ValidateInput(Matrix22);
+
+        }
+
+        private void UpdateGUI(System.Windows.Controls.TextBox matrixInput)
+        {
+            Console.WriteLine(matrixInput.Name);
+            matrixInput.Foreground = System.Windows.Media.Brushes.IndianRed;
+            matrixInput.Text = "0";
+
+        }
+
+        private void ValidateInput(System.Windows.Controls.TextBox textBox)
+        {
+            var textBoxLength = textBox.Name.Length;
+            var x = int.Parse(textBox.Name.Substring(textBoxLength - 2, 1));
+            var y = int.Parse(textBox.Name.Substring(textBoxLength - 1, 1));
+
+            if (!int.TryParse(textBox.Text, out matrix[x, y])) UpdateGUI(textBox);
+        }
+
+        private void PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            e.Handled = IsInputValid(e.Text);
+        }
+
+        private static bool IsInputValid(string input)
+        {
+
+            return _regex.IsMatch(input);
         }
 
         private bool runCppProc()
