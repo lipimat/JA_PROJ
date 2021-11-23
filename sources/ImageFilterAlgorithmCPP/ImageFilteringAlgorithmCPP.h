@@ -6,4 +6,11 @@
 #define ALGORITHM_API __declspec(dllimport)
 #endif
 
-extern "C" ALGORITHM_API void cppProc(UINT8 * pixels, int len);
+struct ImageInfoStruct
+{
+	UINT8* pixels;
+	int pixelsLen;
+	int** matrix;
+};
+
+extern "C" ALGORITHM_API void cppProc(ImageInfoStruct* imageInfo);

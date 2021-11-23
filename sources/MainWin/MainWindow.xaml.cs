@@ -11,11 +11,18 @@ namespace dllFunctions
     class CDllFunctionHandler
     {
         [DllImport("ImageFilterAlgorithmCPP.dll")]
-        public static extern int cppProc(byte[] pixels, int len);
+        public static unsafe extern int cppProc(ImageInfoStruct* structurPtr);
 
         [DllImport("ImageFilterAlgorithmASM.dll")]
-        public static unsafe extern int asmProc(byte* pixels, int len); 
+        public static unsafe extern int asmProc(ImageInfoStruct* structurePtr); 
     }
+}
+
+public unsafe struct ImageInfoStruct
+{
+    public byte* pixels;
+    public int pixelsLen;
+    public int** transformationMatrix;
 }
 
 namespace MainWin
@@ -23,6 +30,7 @@ namespace MainWin
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
     public partial class MainWindow : Window
     {
         private string selectedFileName, selectedProcedure;
@@ -30,6 +38,8 @@ namespace MainWin
         int bitmapStride;
         int[,] matrix = new int[3,3];
         BitmapImage originalBitmap;
+
+        private static ImageInfoStruct imageInfoStruct = new ImageInfoStruct();
 
         public MainWindow()
         {
@@ -96,10 +106,18 @@ namespace MainWin
         {
             unsafe
             {
-                fixed(byte* ptr = imageToPixelArray)
+                fixed (ImageInfoStruct* tempPtr = &imageInfoStruct)
                 {
-                    dllFunctions.CDllFunctionHandler.asmProc(ptr, imageToPixelArray.Length);
-                };
+                    fixed (byte* tempPixels = imageToPixelArray)
+                    {
+                        imageInfoStruct.pixels = tempPixels;
+                        imageInfoStruct.pixelsLen = imageToPixelArray.Length;
+                        GCHandle h = GCHandle.Alloc(matrix, GCHandleType.Pinned);
+                        imageInfoStruct.transformationMatrix = (int**)h.AddrOfPinnedObject();
+                        h.Free();
+                        dllFunctions.CDllFunctionHandler.asmProc(tempPtr);
+                    }
+                }
             }
             return true;
         }
@@ -119,7 +137,21 @@ namespace MainWin
 
         private bool runCppProc()
         {
-            dllFunctions.CDllFunctionHandler.cppProc(imageToPixelArray, imageToPixelArray.Length);
+            unsafe
+            {
+                fixed (ImageInfoStruct* tempPtr = &imageInfoStruct)
+                {
+                    fixed (byte* tempPixels = imageToPixelArray)
+                    {
+                        imageInfoStruct.pixels = tempPixels;
+                        imageInfoStruct.pixelsLen = imageToPixelArray.Length;
+                        GCHandle h = GCHandle.Alloc(matrix, GCHandleType.Pinned);
+                        imageInfoStruct.transformationMatrix = (int**)h.AddrOfPinnedObject();
+                        h.Free();
+                        dllFunctions.CDllFunctionHandler.cppProc(tempPtr);
+                    }
+                }
+            }
             return true;
         }
     }
