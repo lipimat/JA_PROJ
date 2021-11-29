@@ -1,15 +1,59 @@
 #include "pch.h"
 #include "ImageFilteringAlgorithmCPP.h"
 
+float hardCodedFilter[3][3] =
+{
+	{0.1,0.1,0.1},
+	{0.1,0.1,0.1},
+	{0.1,0.1,0.1}
+};
+
 void cppProc(ImageInfoStruct* imageInfo)
 {
-	for (int i = 0; i < imageInfo->pixelsLen; i++) {
-		//blue
-		if (i % 4 == 0) imageInfo->pixels[i] = 255;
-		//green
-		else if (i % 4 == 1) imageInfo->pixels[i] = 0;
-		//blue
-		else if (i % 4 == 2) imageInfo->pixels[i] = 0;
-		//else alpha - we don't care
+	int width = imageInfo->width;
+	int height = imageInfo->height;
+	Pixel* pixelArray = imageInfo->pixels;
+
+	//loop through all pixels*
+	//*for now we skip first and last row, and first and last column
+	for (int i = width; i < width * (height - 1); ++i)
+	{
+		//we hit first or last column
+		if (i % width == 0 || i % width  == width - 1) continue;
+
+
+		//calculate pixel member values
+		float bValues = 0, gValues = 0, rValues = 0;
+		int curKernelRow = 0, curKernelCol = 0;
+		for (int k = i - width - 1; k <= i + width - 1; k += width)
+		{
+
+			for (int j = k; j <= k + 2; ++j)
+			{
+				bValues += pixelArray[j].bValue * hardCodedFilter[curKernelRow][curKernelCol];
+				gValues += pixelArray[j].gValue * hardCodedFilter[curKernelRow][curKernelCol];
+				rValues += pixelArray[j].rValue * hardCodedFilter[curKernelRow][curKernelCol];
+				++curKernelCol;
+			}
+			++curKernelRow;
+			curKernelCol = 0;
+		}
+
+		if (bValues > 255)
+			bValues = 255;
+		else if (bValues < 0)
+			bValues = 0;
+		if (gValues > 255)
+			gValues = 255;
+		else if (gValues < 0)
+			gValues = 0;
+		if (rValues > 255)
+			rValues = 255;
+		else if (rValues < 0)
+			rValues = 0;
+
+		pixelArray[i].bValue = bValues;
+		pixelArray[i].gValue = gValues;
+		pixelArray[i].rValue = rValues;
 	}
 }

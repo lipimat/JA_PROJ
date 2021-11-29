@@ -6,10 +6,21 @@
 #define ALGORITHM_API __declspec(dllimport)
 #endif
 
+struct Pixel
+{
+	UINT8 bValue;
+	UINT8 gValue;
+	UINT8 rValue;
+
+	//not used
+	UINT8 alpha;
+};
+
 struct ImageInfoStruct
 {
-	UINT8* pixels;
-	int pixelsLen;
+	Pixel* pixels;
+	int width;
+	int height;
 	int** matrix;
 };
 
