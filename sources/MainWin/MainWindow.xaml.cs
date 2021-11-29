@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Windows;
 using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Media.Imaging;
-using System.Drawing;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace dllFunctions
 {
@@ -18,10 +17,21 @@ namespace dllFunctions
     }
 }
 
+public unsafe struct Pixel
+{
+    public byte bValue;
+    public byte gValue;
+    public byte rValue;
+
+    //not used
+    public byte alpha;
+}
+
 public unsafe struct ImageInfoStruct
 {
-    public byte* pixels;
-    public int pixelsLen;
+    public Pixel* pixels;
+    public int width;
+    public int height;
     public int** transformationMatrix;
 }
 
@@ -34,27 +44,16 @@ namespace MainWin
     public partial class MainWindow : Window
     {
         private string selectedFileName, selectedProcedure;
-        private byte[] imageToPixelArray;
-        int bitmapStride;
+        private byte[] imageToByteArray;
+        int countOfBytesInRow;
         int[,] matrix = new int[3,3];
         BitmapImage originalBitmap;
 
-        private static ImageInfoStruct imageInfoStruct = new ImageInfoStruct();
-
+        private static ImageInfoStruct imageInfoStruct;
+        private static Pixel[] imageToPixelArray;
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-
-        private void OnClearImage(object sender, RoutedEventArgs e)
-        {
-            if (originalBitmap != null)
-            {
-                imageToPixelArray = new byte[originalBitmap.PixelHeight * bitmapStride];
-                originalBitmap.CopyPixels(imageToPixelArray, bitmapStride, 0);
-                ImageViewer2.Source = null;
-            }
         }
 
         private void OnComboSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -67,11 +66,14 @@ namespace MainWin
         {
             if (originalBitmap != null && selectedProcedure != null)
             {
+                imageToPixelArray = ByteArrToPixelArr();
 
-                bool chooseProcedure =  ("Assembly procedure" == selectedProcedure) ? runAssemblyProc() : runCppProc(); 
+                bool chooseProcedure =  ("Assembly procedure" == selectedProcedure) ? runAssemblyProc() : runCppProc();
 
-                var processedBitmap = BitmapSource.Create(originalBitmap.PixelWidth, originalBitmap.PixelHeight, 96, 96, PixelFormats.Bgr32, null, imageToPixelArray, bitmapStride);
+                imageToByteArray = PixelArrToByteArr();
+                var processedBitmap = BitmapSource.Create(originalBitmap.PixelWidth, originalBitmap.PixelHeight, 96, 96, PixelFormats.Bgr32, null, imageToByteArray, countOfBytesInRow);
                 ImageViewer2.Source = processedBitmap;
+                originalBitmap.CopyPixels(imageToByteArray, countOfBytesInRow, 0);
             }
         }
 
@@ -93,25 +95,23 @@ namespace MainWin
                 ImageViewer1.Source = originalBitmap;
 
 
-                //convert original image to pixel array
-                int height = originalBitmap.PixelHeight;
-                int width = originalBitmap.PixelWidth;
-                bitmapStride = (width * originalBitmap.Format.BitsPerPixel + 7) / 8;
-                imageToPixelArray = new byte[height * bitmapStride];
-                originalBitmap.CopyPixels(imageToPixelArray, bitmapStride, 0);
+                //convert original image to byte and pixel array
+                countOfBytesInRow = (originalBitmap.PixelWidth * originalBitmap.Format.BitsPerPixel + 7) / 8;
+                imageToByteArray = new byte[originalBitmap.PixelHeight * countOfBytesInRow];
+                originalBitmap.CopyPixels(imageToByteArray, countOfBytesInRow, 0);
             }
         }
-
         private bool runAssemblyProc()
         {
             unsafe
             {
                 fixed (ImageInfoStruct* tempPtr = &imageInfoStruct)
-                {
-                    fixed (byte* tempPixels = imageToPixelArray)
+                { 
+                    fixed (Pixel* tempPixels = &imageToPixelArray[0])
                     {
                         imageInfoStruct.pixels = tempPixels;
-                        imageInfoStruct.pixelsLen = imageToPixelArray.Length;
+                        imageInfoStruct.width= originalBitmap.PixelWidth;
+                        imageInfoStruct.height = originalBitmap.PixelHeight;
                         GCHandle h = GCHandle.Alloc(matrix, GCHandleType.Pinned);
                         imageInfoStruct.transformationMatrix = (int**)h.AddrOfPinnedObject();
                         h.Free();
@@ -121,30 +121,17 @@ namespace MainWin
             }
             return true;
         }
-
-        private void ApplyMatrix(object sender, RoutedEventArgs e)
-        {
-            matrix[0,0] = int.Parse(Matrix00.Text);
-            matrix[0,1] = int.Parse(Matrix01.Text);
-            matrix[0,2] = int.Parse(Matrix02.Text);
-            matrix[1,0] = int.Parse(Matrix10.Text);
-            matrix[1,1] = int.Parse(Matrix11.Text);
-            matrix[1,2] = int.Parse(Matrix12.Text);
-            matrix[2,0] = int.Parse(Matrix20.Text);
-            matrix[2,1] = int.Parse(Matrix21.Text);
-            matrix[2,2] = int.Parse(Matrix22.Text);
-        }
-
         private bool runCppProc()
         {
             unsafe
             {
                 fixed (ImageInfoStruct* tempPtr = &imageInfoStruct)
                 {
-                    fixed (byte* tempPixels = imageToPixelArray)
+                    fixed (Pixel* tempPixels = &imageToPixelArray[0])
                     {
                         imageInfoStruct.pixels = tempPixels;
-                        imageInfoStruct.pixelsLen = imageToPixelArray.Length;
+                        imageInfoStruct.width = originalBitmap.PixelWidth;
+                        imageInfoStruct.height = originalBitmap.PixelHeight;
                         GCHandle h = GCHandle.Alloc(matrix, GCHandleType.Pinned);
                         imageInfoStruct.transformationMatrix = (int**)h.AddrOfPinnedObject();
                         h.Free();
@@ -153,6 +140,62 @@ namespace MainWin
                 }
             }
             return true;
+        }
+
+        private void ApplyMatrix(object sender, RoutedEventArgs e)
+        {
+            matrix[0, 0] = int.Parse(Matrix00.Text);
+            matrix[0, 1] = int.Parse(Matrix01.Text);
+            matrix[0, 2] = int.Parse(Matrix02.Text);
+            matrix[1, 0] = int.Parse(Matrix10.Text);
+            matrix[1, 1] = int.Parse(Matrix11.Text);
+            matrix[1, 2] = int.Parse(Matrix12.Text);
+            matrix[2, 0] = int.Parse(Matrix20.Text);
+            matrix[2, 1] = int.Parse(Matrix21.Text);
+            matrix[2, 2] = int.Parse(Matrix22.Text);
+        }
+
+        private Pixel[] ByteArrToPixelArr()
+        {
+            Pixel[] pixelArray = new Pixel[originalBitmap.PixelWidth * originalBitmap.PixelHeight];
+            int index = 0;
+            unsafe
+            {
+                Pixel p;
+                fixed (byte* tempArr = imageToByteArray)
+                {
+                    for (int i = 0; i < imageToByteArray.Length; i += 4)
+                    {
+                        p.bValue = tempArr[i];
+                        p.gValue = tempArr[i + 1];
+                        p.rValue = tempArr[i + 2];
+                        p.alpha = tempArr[i + 3];
+
+                        pixelArray[index++] = p;
+                    }
+                }
+            }
+            return pixelArray;
+        }
+
+        private byte[] PixelArrToByteArr()
+        {
+            byte[] byteArray = new byte[originalBitmap.PixelHeight * countOfBytesInRow];
+            int index = 0;
+            unsafe
+            {
+                fixed (Pixel* tempArr = imageToPixelArray)
+                {
+                    for (int i = 0; i < imageToByteArray.Length; i += 4)
+                    {
+                        byteArray[i] = tempArr[index].bValue;
+                        byteArray[i + 1] = tempArr[index].gValue;
+                        byteArray[i + 2] = tempArr[index].rValue;
+                        byteArray[i + 3] = tempArr[index++].alpha;
+                    }
+                }
+            }
+            return byteArray;
         }
     }
 }
