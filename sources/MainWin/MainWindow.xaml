@@ -33,17 +33,16 @@
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
             </Grid.RowDefinitions>
-            <TextBox Name="Matrix00" Grid.Column="0" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
-            <TextBox Name="Matrix01" Grid.Row="1" Grid.Column="0" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
-            <TextBox Name="Matrix02" Grid.Row="2" Grid.Column="0"  TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
-            <TextBox Name="Matrix10" Grid.Column="1"  TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
-            <TextBox Name="Matrix11" Grid.Row="1" Grid.Column="1"  TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
-            <TextBox Name="Matrix12" Grid.Row="2" Grid.Column="1" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center" />
-            <TextBox Name="Matrix20" Grid.Column="2" Grid.ColumnSpan="2" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
-            <TextBox Name="Matrix21" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center" />
-            <TextBox Name="Matrix22" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox PreviewTextInput="PreviewTextInput" Name="Matrix00" Grid.Column="0" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox PreviewTextInput="PreviewTextInput" Name="Matrix01" Grid.Row="1" Grid.Column="0" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox PreviewTextInput="PreviewTextInput" Name="Matrix02" Grid.Row="2" Grid.Column="0"  TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox PreviewTextInput="PreviewTextInput" Name="Matrix10" Grid.Column="1"  TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox PreviewTextInput="PreviewTextInput" Name="Matrix11" Grid.Row="1" Grid.Column="1"  TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox PreviewTextInput="PreviewTextInput" Name="Matrix12" Grid.Row="2" Grid.Column="1" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center" />
+            <TextBox PreviewTextInput="PreviewTextInput" Name="Matrix20" Grid.Column="2" Grid.ColumnSpan="2" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
+            <TextBox PreviewTextInput="PreviewTextInput" Name="Matrix21" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center" />
+            <TextBox PreviewTextInput="PreviewTextInput" Name="Matrix22" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
         </Grid>
-        <Button Content="Apply matrix" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ApplyMatrix" Width="122" Margin="247,480,0,0"/>
 
         <Label Content="Filter matrix" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="19,413,0,0"/>
     </Grid>
