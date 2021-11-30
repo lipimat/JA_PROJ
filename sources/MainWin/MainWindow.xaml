@@ -22,7 +22,6 @@
             <ComboBoxItem Content="Assembly procedure"/>
             <ComboBoxItem Content="C++ procedure"/>
         </ComboBox>
-        <Button Content="Clear image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" HorizontalAlignment="Left" Margin="836,6,0,0" VerticalAlignment="Top" Click="OnClearImage" Width="121"/>
         <Grid Margin="121,413,770,105">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition  Width="30"/>
