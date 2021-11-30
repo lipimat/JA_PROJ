@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MainWin"
         mc:Ignorable="d"
-        Title="MainWindow" Height="650" Width="1000" Background="#464b4f">
+        Title="MainWindow" Height="650" Width="1000" Background="#464b4f" ResizeMode="NoResize">
     <Grid>
         <Label Content="Original Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="19,3,0,0"/>
-        <Button Content="Upload Image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"  Click="BrowseButton_Click" Margin="247,3,631,606" />
+        <Button Content="Upload Image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"  Click="BrowseButton_Click" Margin="246,8,625,577" />
         <Border  Height="350" Width="350" Background="#4e5357" Margin="19,44,631,240">
             <Image x:Name="ImageViewer1" Height="350" Width="350"/>
         </Border>

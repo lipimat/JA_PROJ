@@ -1,18 +1,12 @@
 #include "pch.h"
 #include "ImageFilteringAlgorithmCPP.h"
 
-float hardCodedFilter[3][3] =
-{
-	{0.1,0.1,0.1},
-	{0.1,0.1,0.1},
-	{0.1,0.1,0.1}
-};
-
 void cppProc(ImageInfoStruct* imageInfo)
 {
 	int width = imageInfo->width;
 	int height = imageInfo->height;
 	Pixel* pixelArray = imageInfo->pixels;
+	float* kernel = imageInfo->matrix;
 
 	//loop through all pixels*
 	//*for now we skip first and last row, and first and last column
@@ -20,7 +14,6 @@ void cppProc(ImageInfoStruct* imageInfo)
 	{
 		//we hit first or last column
 		if (i % width == 0 || i % width  == width - 1) continue;
-
 
 		//calculate pixel member values
 		float bValues = 0, gValues = 0, rValues = 0;
@@ -30,9 +23,9 @@ void cppProc(ImageInfoStruct* imageInfo)
 
 			for (int j = k; j <= k + 2; ++j)
 			{
-				bValues += pixelArray[j].bValue * hardCodedFilter[curKernelRow][curKernelCol];
-				gValues += pixelArray[j].gValue * hardCodedFilter[curKernelRow][curKernelCol];
-				rValues += pixelArray[j].rValue * hardCodedFilter[curKernelRow][curKernelCol];
+				bValues += pixelArray[j].bValue * kernel[curKernelRow * 3 + curKernelCol];
+				gValues += pixelArray[j].gValue * kernel[curKernelRow * 3 + curKernelCol];
+				rValues += pixelArray[j].rValue * kernel[curKernelRow * 3 + curKernelCol];
 				++curKernelCol;
 			}
 			++curKernelRow;

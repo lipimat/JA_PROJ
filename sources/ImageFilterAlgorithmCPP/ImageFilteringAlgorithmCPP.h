@@ -21,7 +21,7 @@ struct ImageInfoStruct
 	Pixel* pixels;
 	int width;
 	int height;
-	int** matrix;
+	float* matrix;
 };
 
 extern "C" ALGORITHM_API void cppProc(ImageInfoStruct* imageInfo);

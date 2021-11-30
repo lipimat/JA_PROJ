@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Text.RegularExpressions;
-
+using System.Globalization;
 
 namespace dllFunctions
 {
@@ -34,7 +34,7 @@ public unsafe struct ImageInfoStruct
     public Pixel* pixels;
     public int width;
     public int height;
-    public int** transformationMatrix;
+    public float* transformationMatrix;
 }
 
 namespace MainWin
@@ -48,9 +48,9 @@ namespace MainWin
         private static readonly Regex _regex = new Regex("[^0-9.-]+");
         private string selectedFileName, selectedProcedure;
         private byte[] imageToByteArray;
-        int countOfBytesInRow;
-        int[,] matrix = new int[3,3];
-        BitmapImage originalBitmap;
+        private int countOfBytesInRow;
+        private float[,] matrix = new float[3,3];
+        private BitmapImage originalBitmap;
 
         private static ImageInfoStruct imageInfoStruct;
         private static Pixel[] imageToPixelArray;
@@ -113,13 +113,14 @@ namespace MainWin
                 { 
                     fixed (Pixel* tempPixels = &imageToPixelArray[0])
                     {
-                        imageInfoStruct.pixels = tempPixels;
-                        imageInfoStruct.width= originalBitmap.PixelWidth;
-                        imageInfoStruct.height = originalBitmap.PixelHeight;
-                        GCHandle h = GCHandle.Alloc(matrix, GCHandleType.Pinned);
-                        imageInfoStruct.transformationMatrix = (int**)h.AddrOfPinnedObject();
-                        h.Free();
-                        dllFunctions.CDllFunctionHandler.asmProc(tempPtr);
+                        fixed (float* tempKernel = matrix)
+                        {
+                            imageInfoStruct.pixels = tempPixels;
+                            imageInfoStruct.width = originalBitmap.PixelWidth;
+                            imageInfoStruct.height = originalBitmap.PixelHeight;
+                            imageInfoStruct.transformationMatrix = tempKernel;
+                            dllFunctions.CDllFunctionHandler.asmProc(tempPtr);
+                        }
                     }
                 }
             }
@@ -133,13 +134,14 @@ namespace MainWin
                 {
                     fixed (Pixel* tempPixels = &imageToPixelArray[0])
                     {
-                        imageInfoStruct.pixels = tempPixels;
-                        imageInfoStruct.width = originalBitmap.PixelWidth;
-                        imageInfoStruct.height = originalBitmap.PixelHeight;
-                        GCHandle h = GCHandle.Alloc(matrix, GCHandleType.Pinned);
-                        imageInfoStruct.transformationMatrix = (int**)h.AddrOfPinnedObject();
-                        h.Free();
-                        dllFunctions.CDllFunctionHandler.cppProc(tempPtr);
+                        fixed (float* tempKernel = matrix)
+                        {
+                            imageInfoStruct.pixels = tempPixels;
+                            imageInfoStruct.width = originalBitmap.PixelWidth;
+                            imageInfoStruct.height = originalBitmap.PixelHeight;
+                            imageInfoStruct.transformationMatrix = tempKernel;
+                            dllFunctions.CDllFunctionHandler.cppProc(tempPtr);
+                        }
                     }
                 }
             }
@@ -173,7 +175,8 @@ namespace MainWin
             var x = int.Parse(textBox.Name.Substring(textBoxLength - 2, 1));
             var y = int.Parse(textBox.Name.Substring(textBoxLength - 1, 1));
 
-            if (!int.TryParse(textBox.Text, out matrix[x, y])) UpdateGUI(textBox);
+            if (!float.TryParse(textBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out matrix[x, y])) 
+                UpdateGUI(textBox);
         }
 
         private void PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
