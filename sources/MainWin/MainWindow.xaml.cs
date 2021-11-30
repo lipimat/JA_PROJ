@@ -58,6 +58,7 @@ namespace MainWin
         {
             if (originalBitmap != null && selectedProcedure != null)
             {
+                ValidateInputs();
 
                 bool chooseProcedure =  ("Assembly procedure" == selectedProcedure) ? runAssemblyProc() : runCppProc(); 
 
@@ -105,11 +106,6 @@ namespace MainWin
             return true;
         }
 
-        private void ApplyMatrix(object sender, RoutedEventArgs e)
-        {
-            ValidateInputs();
-        }
-
         private void ValidateInputs()
         {
 
@@ -128,7 +124,7 @@ namespace MainWin
         private void UpdateGUI(System.Windows.Controls.TextBox matrixInput)
         {
             Console.WriteLine(matrixInput.Name);
-            matrixInput.Foreground = System.Windows.Media.Brushes.IndianRed;
+            matrixInput.Foreground = Brushes.IndianRed;
             matrixInput.Text = "0";
 
         }
