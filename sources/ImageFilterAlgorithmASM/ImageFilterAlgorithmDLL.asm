@@ -16,7 +16,6 @@ mov ebx, [rcx+12]			; wysokosc obrazu w pikslach
 mov pixelsHeight, ebx
 mov rbx, [rcx+16]			; wskaznik na macierz transformacji
 mov matrix, rbx
-
 mov eax, pixelsWidth		; policz ile jest piksli
 mul pixelsHeight
 mov pixelsCount, eax
