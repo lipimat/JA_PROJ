@@ -6,22 +6,14 @@
 #define ALGORITHM_API __declspec(dllimport)
 #endif
 
-struct Pixel
-{
-	UINT8 bValue;
-	UINT8 gValue;
-	UINT8 rValue;
-
-	//not used
-	UINT8 alpha;
-};
-
 struct ImageInfoStruct
 {
-	Pixel* pixels;
-	int width;
+	//order here -> blue -> green -> red -> alpha -> ...
+	UINT8* bytes;
+	int countOfBytesInRow;
 	int height;
-	float* matrix;
+	int* matrix;
+	int checkSum;
 };
 
 extern "C" ALGORITHM_API void cppProc(ImageInfoStruct* imageInfo);
