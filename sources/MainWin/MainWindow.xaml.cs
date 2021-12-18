@@ -19,22 +19,13 @@ namespace dllFunctions
     }
 }
 
-public unsafe struct Pixel
-{
-    public byte bValue;
-    public byte gValue;
-    public byte rValue;
-
-    //not used
-    public byte alpha;
-}
-
 public unsafe struct ImageInfoStruct
 {
-    public Pixel* pixels;
-    public int width;
+    public byte* byteArray;
+    public int countOfBytesInRow;
     public int height;
-    public float* transformationMatrix;
+    public int* transformationMatrix;
+    public int checkSum;
 }
 
 namespace MainWin
@@ -49,11 +40,10 @@ namespace MainWin
         private string selectedFileName, selectedProcedure;
         private byte[] imageToByteArray;
         private int countOfBytesInRow;
-        private float[,] matrix = new float[3,3];
+        private int[,] matrix = new int[3,3];
         private BitmapImage originalBitmap;
+        private static ImageInfoStruct imageInfoStruct = new ImageInfoStruct();
 
-        private static ImageInfoStruct imageInfoStruct;
-        private static Pixel[] imageToPixelArray;
         public MainWindow()
         {
             InitializeComponent();
@@ -70,12 +60,11 @@ namespace MainWin
             if (originalBitmap != null && selectedProcedure != null)
             {
                 ValidateInputs();
-                imageToPixelArray = ByteArrToPixelArr();
 
                 bool chooseProcedure =  ("Assembly procedure" == selectedProcedure) ? runAssemblyProc() : runCppProc();
 
-                imageToByteArray = PixelArrToByteArr();
-                var processedBitmap = BitmapSource.Create(originalBitmap.PixelWidth, originalBitmap.PixelHeight, 96, 96, PixelFormats.Bgr32, null, imageToByteArray, countOfBytesInRow);
+                
+                var processedBitmap = BitmapSource.Create(originalBitmap.PixelWidth, originalBitmap.PixelHeight, originalBitmap.DpiX, originalBitmap.DpiY, originalBitmap.Format, null, imageToByteArray, countOfBytesInRow);
                 ImageViewer2.Source = processedBitmap;
                 originalBitmap.CopyPixels(imageToByteArray, countOfBytesInRow, 0);
             }
@@ -111,14 +100,16 @@ namespace MainWin
             {
                 fixed (ImageInfoStruct* tempPtr = &imageInfoStruct)
                 { 
-                    fixed (Pixel* tempPixels = &imageToPixelArray[0])
+                    fixed (byte* tempPixels = imageToByteArray)
                     {
-                        fixed (float* tempKernel = matrix)
+                        fixed (int* tempKernel = matrix)
                         {
-                            imageInfoStruct.pixels = tempPixels;
-                            imageInfoStruct.width = originalBitmap.PixelWidth;
+                            imageInfoStruct.byteArray = tempPixels;
+                            imageInfoStruct.countOfBytesInRow = countOfBytesInRow;
                             imageInfoStruct.height = originalBitmap.PixelHeight;
                             imageInfoStruct.transformationMatrix = tempKernel;
+                            imageInfoStruct.checkSum = matrix[0, 0] + matrix[0, 1] + matrix[0, 2] + matrix[1, 0] + matrix[1, 1] + matrix[1, 2] + matrix[2, 0]
+                                + matrix[2, 1] + matrix[2, 2];
                             dllFunctions.CDllFunctionHandler.asmProc(tempPtr);
                         }
                     }
@@ -132,14 +123,16 @@ namespace MainWin
             {
                 fixed (ImageInfoStruct* tempPtr = &imageInfoStruct)
                 {
-                    fixed (Pixel* tempPixels = &imageToPixelArray[0])
+                    fixed (byte* tempPixels = imageToByteArray)
                     {
-                        fixed (float* tempKernel = matrix)
+                        fixed (int* tempKernel = matrix)
                         {
-                            imageInfoStruct.pixels = tempPixels;
-                            imageInfoStruct.width = originalBitmap.PixelWidth;
+                            imageInfoStruct.byteArray = tempPixels;
+                            imageInfoStruct.countOfBytesInRow = countOfBytesInRow;
                             imageInfoStruct.height = originalBitmap.PixelHeight;
                             imageInfoStruct.transformationMatrix = tempKernel;
+                            imageInfoStruct.checkSum = matrix[0, 0] + matrix[0, 1] + matrix[0, 2] + matrix[1, 0] + matrix[1, 1] + matrix[1, 2] + matrix[2, 0]
+                                + matrix[2, 1] + matrix[2, 2];
                             dllFunctions.CDllFunctionHandler.cppProc(tempPtr);
                         }
                     }
@@ -175,7 +168,7 @@ namespace MainWin
             var x = int.Parse(textBox.Name.Substring(textBoxLength - 2, 1));
             var y = int.Parse(textBox.Name.Substring(textBoxLength - 1, 1));
 
-            if (!float.TryParse(textBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out matrix[x, y])) 
+            if (!int.TryParse(textBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out matrix[x, y])) 
                 UpdateGUI(textBox);
         }
 
@@ -186,51 +179,7 @@ namespace MainWin
 
         private static bool IsInputValid(string input)
         {
-
             return _regex.IsMatch(input);
-        }
-
-        private Pixel[] ByteArrToPixelArr()
-        {
-            Pixel[] pixelArray = new Pixel[originalBitmap.PixelWidth * originalBitmap.PixelHeight];
-            int index = 0;
-            unsafe
-            {
-                Pixel p;
-                fixed (byte* tempArr = imageToByteArray)
-                {
-                    for (int i = 0; i < imageToByteArray.Length; i += 4)
-                    {
-                        p.bValue = tempArr[i];
-                        p.gValue = tempArr[i + 1];
-                        p.rValue = tempArr[i + 2];
-                        p.alpha = tempArr[i + 3];
-
-                        pixelArray[index++] = p;
-                    }
-                }
-            }
-            return pixelArray;
-        }
-
-        private byte[] PixelArrToByteArr()
-        {
-            byte[] byteArray = new byte[originalBitmap.PixelHeight * countOfBytesInRow];
-            int index = 0;
-            unsafe
-            {
-                fixed (Pixel* tempArr = imageToPixelArray)
-                {
-                    for (int i = 0; i < imageToByteArray.Length; i += 4)
-                    {
-                        byteArray[i] = tempArr[index].bValue;
-                        byteArray[i + 1] = tempArr[index].gValue;
-                        byteArray[i + 2] = tempArr[index].rValue;
-                        byteArray[i + 3] = tempArr[index++].alpha;
-                    }
-                }
-            }
-            return byteArray;
         }
     }
 }
