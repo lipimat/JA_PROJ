@@ -9,7 +9,8 @@
 struct ImageInfoStruct
 {
 	//order here -> blue -> green -> red -> alpha -> ...
-	UINT8* bytes;
+	UINT8* originalBytes;
+	UINT8* resultBytes;
 	int countOfBytesInRow;
 	int height;
 	int* matrix;

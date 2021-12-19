@@ -21,7 +21,8 @@ namespace dllFunctions
 
 public unsafe struct ImageInfoStruct
 {
-    public byte* byteArray;
+    public byte* originalbyteArray;
+    public byte* resultByteArray;
     public int countOfBytesInRow;
     public int height;
     public int* transformationMatrix;
@@ -39,6 +40,7 @@ namespace MainWin
         private static readonly Regex _regex = new Regex("[^0-9.-]+");
         private string selectedFileName, selectedProcedure;
         private byte[] imageToByteArray;
+        private byte[] resultByteArray;
         private int countOfBytesInRow;
         private int[,] matrix = new int[3,3];
         private BitmapImage originalBitmap;
@@ -64,9 +66,8 @@ namespace MainWin
                 bool chooseProcedure =  ("Assembly procedure" == selectedProcedure) ? runAssemblyProc() : runCppProc();
 
                 
-                var processedBitmap = BitmapSource.Create(originalBitmap.PixelWidth, originalBitmap.PixelHeight, originalBitmap.DpiX, originalBitmap.DpiY, originalBitmap.Format, null, imageToByteArray, countOfBytesInRow);
+                var processedBitmap = BitmapSource.Create(originalBitmap.PixelWidth, originalBitmap.PixelHeight, originalBitmap.DpiX, originalBitmap.DpiY, originalBitmap.Format, null, resultByteArray, countOfBytesInRow);
                 ImageViewer2.Source = processedBitmap;
-                originalBitmap.CopyPixels(imageToByteArray, countOfBytesInRow, 0);
             }
         }
 
@@ -91,7 +92,9 @@ namespace MainWin
                 //convert original image to byte and pixel array
                 countOfBytesInRow = (originalBitmap.PixelWidth * originalBitmap.Format.BitsPerPixel + 7) / 8;
                 imageToByteArray = new byte[originalBitmap.PixelHeight * countOfBytesInRow];
+                resultByteArray = new byte[originalBitmap.PixelHeight * countOfBytesInRow];
                 originalBitmap.CopyPixels(imageToByteArray, countOfBytesInRow, 0);
+                originalBitmap.CopyPixels(resultByteArray, countOfBytesInRow, 0);
             }
         }
         private bool runAssemblyProc()
@@ -100,11 +103,12 @@ namespace MainWin
             {
                 fixed (ImageInfoStruct* tempPtr = &imageInfoStruct)
                 { 
-                    fixed (byte* tempPixels = imageToByteArray)
+                    fixed (byte* tempOriginalPixels = imageToByteArray, tempResultPixels = resultByteArray)
                     {
                         fixed (int* tempKernel = matrix)
                         {
-                            imageInfoStruct.byteArray = tempPixels;
+                            imageInfoStruct.originalbyteArray = tempOriginalPixels;
+                            imageInfoStruct.resultByteArray = tempResultPixels;
                             imageInfoStruct.countOfBytesInRow = countOfBytesInRow;
                             imageInfoStruct.height = originalBitmap.PixelHeight;
                             imageInfoStruct.transformationMatrix = tempKernel;
@@ -123,11 +127,12 @@ namespace MainWin
             {
                 fixed (ImageInfoStruct* tempPtr = &imageInfoStruct)
                 {
-                    fixed (byte* tempPixels = imageToByteArray)
+                    fixed (byte* tempOriginalPixels = imageToByteArray, tempResultPixels = resultByteArray)
                     {
                         fixed (int* tempKernel = matrix)
                         {
-                            imageInfoStruct.byteArray = tempPixels;
+                            imageInfoStruct.originalbyteArray = tempOriginalPixels;
+                            imageInfoStruct.resultByteArray = tempResultPixels;
                             imageInfoStruct.countOfBytesInRow = countOfBytesInRow;
                             imageInfoStruct.height = originalBitmap.PixelHeight;
                             imageInfoStruct.transformationMatrix = tempKernel;
