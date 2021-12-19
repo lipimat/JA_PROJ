@@ -7,7 +7,8 @@ void cppProc(ImageInfoStruct* imageInfo)
 	int counter = 0;
 	int width = imageInfo->countOfBytesInRow;
 	int height = imageInfo->height;
-	UINT8* byteArray = imageInfo->bytes;
+	UINT8* originalArray = imageInfo->originalBytes;
+	UINT8* copyArray = imageInfo->resultBytes;
 	int* kernel = imageInfo->matrix;
 	int checkSum;
 	if (imageInfo->checkSum == 0)
@@ -19,12 +20,10 @@ void cppProc(ImageInfoStruct* imageInfo)
 	//*for now we skip first and last row, and first and last column
 	for (int i = width + 4; i < width * (height - 1); i++)
 	{
-		//we hit first or last column so skip 3 bytes and 1 from loop counter
-		if (i % width == 0 || i % width == width - 4)
-		{
-			i += 3; //and one from loop counter
-			continue;
-		}
+		//we hit last column so skip 8 bytes
+		if (i % width == width - 4)
+			i += 8;
+		
 		//we hit alpha
 		if (alphaCounter == 4) {
 			alphaCounter = 1;
@@ -38,11 +37,12 @@ void cppProc(ImageInfoStruct* imageInfo)
 		//1 4 7							//i-4	i(currently filtered)	i+4	
 		//2 5 8							//i+width-4	i+width	i+width+4
 		newByteVal =
-			byteArray[i  - width - 4] * kernel[0] + byteArray[i - width] * kernel[3] + byteArray[i - width + 4] * kernel[6] 
-		  + byteArray[i - 4] * kernel[1] + byteArray[i] * kernel[4] + byteArray[i + 4] * kernel[7] 
-		  + byteArray[i + width - 4] * kernel[2] + byteArray[i + width] * kernel[5] + byteArray[i + width + 4] * kernel[8];
+			originalArray[i  - width - 4] * kernel[0] + originalArray[i - width] * kernel[3] + originalArray[i - width + 4] * kernel[6] 
+		  + originalArray[i - 4] * kernel[1] + originalArray[i] * kernel[4] + originalArray[i + 4] * kernel[7] 
+		  + originalArray[i + width - 4] * kernel[2] + originalArray[i + width] * kernel[5] + originalArray[i + width + 4] * kernel[8];
 
 		if (newByteVal < 0) newByteVal = 0;
-		byteArray[i] = newByteVal /checkSum;
+
+		copyArray[i] = newByteVal /checkSum;
 	}
 }
