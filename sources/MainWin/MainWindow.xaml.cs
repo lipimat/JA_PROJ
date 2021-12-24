@@ -6,6 +6,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace dllFunctions
 {
@@ -45,6 +46,7 @@ namespace MainWin
         private int[,] matrix = new int[3,3];
         private BitmapImage originalBitmap;
         private static ImageInfoStruct imageInfoStruct = new ImageInfoStruct();
+        private static Stopwatch stopwatch = new Stopwatch();
 
         public MainWindow()
         {
@@ -114,7 +116,10 @@ namespace MainWin
                             imageInfoStruct.transformationMatrix = tempKernel;
                             imageInfoStruct.checkSum = matrix[0, 0] + matrix[0, 1] + matrix[0, 2] + matrix[1, 0] + matrix[1, 1] + matrix[1, 2] + matrix[2, 0]
                                 + matrix[2, 1] + matrix[2, 2];
+                            stopwatch.Start();
                             dllFunctions.CDllFunctionHandler.asmProc(tempPtr);
+                            stopwatch.Stop();
+                            asmtime.Text = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds).ToString();
                         }
                     }
                 }
@@ -138,7 +143,10 @@ namespace MainWin
                             imageInfoStruct.transformationMatrix = tempKernel;
                             imageInfoStruct.checkSum = matrix[0, 0] + matrix[0, 1] + matrix[0, 2] + matrix[1, 0] + matrix[1, 1] + matrix[1, 2] + matrix[2, 0]
                                 + matrix[2, 1] + matrix[2, 2];
+                            stopwatch.Start();
                             dllFunctions.CDllFunctionHandler.cppProc(tempPtr);
+                            stopwatch.Stop();
+                            cpptime.Text = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds).ToString();
                         }
                     }
                 }
@@ -180,6 +188,16 @@ namespace MainWin
         private void PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             e.Handled = IsInputValid(e.Text);
+        }
+
+        private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
+        }
+
+        private void asmtime_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
         }
 
         private static bool IsInputValid(string input)
