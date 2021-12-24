@@ -2,34 +2,42 @@
 #include "ImageFilteringAlgorithmCPP.h"
 
 void cppProc(ImageInfoStruct* imageInfo)
-{
-	int alphaCounter = 1;
-	int counter = 0;
+{ 
 	int width = imageInfo->countOfBytesInRow;
 	int height = imageInfo->height;
 	UINT8* originalArray = imageInfo->originalBytes;
 	UINT8* copyArray = imageInfo->resultBytes;
 	int* kernel = imageInfo->matrix;
+
+
 	int checkSum;
 	if (imageInfo->checkSum == 0)
 		checkSum = 1;
 	else checkSum = imageInfo->checkSum;
 
+	int alphaCounter = 1; //if == 4 we hit alpha byte so skip one
+	int lineCounter = 5; //current pos in respect to line
 	int newByteVal;
+
+	int end = width * (height - 1);
 	//loop through all bytes
 	//*for now we skip first and last row, and first and last column
-	for (int i = width + 4; i < width * (height - 1); i++)
+	for (int i = width + 4; i < end; i++)
 	{
 		//we hit last column so skip 8 bytes
-		if (i % width == width - 4)
+		if (lineCounter == width - 4) {
+			lineCounter = 5;
 			i += 8;
+		}
 		
 		//we hit alpha
 		if (alphaCounter == 4) {
 			alphaCounter = 1;
-			continue;
+			lineCounter++;
+			i++;
 		}
 
+		lineCounter++;
 		alphaCounter++;
 		//kernel and *one of pixelvals(r,g,b) nieghborhood are indexed as follows
 		//kernel						//neighborhood
