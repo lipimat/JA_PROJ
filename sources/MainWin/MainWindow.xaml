@@ -5,24 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MainWin"
         mc:Ignorable="d"
-        Title="MainWindow" Height="650" Width="1000" Background="#464b4f" ResizeMode="NoResize">
+        Title="MainWindow" Height="680" Width="1000" Background="#464b4f" ResizeMode="NoResize">
     <Grid>
-        <Label Content="Original Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="19,3,0,0"/>
-        <Button Content="Upload Image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"  Click="BrowseButton_Click" Margin="246,8,625,577" />
-        <Border  Height="350" Width="350" Background="#4e5357" Margin="19,44,631,240">
-            <Image x:Name="ImageViewer1" Height="350" Width="350"/>
+        <Label Content="Original Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="27,10,0,0"/>
+        <Button Content="Upload Image" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f" Click="BrowseButton_Click" Margin="264,10,607,601" />
+        <Border  Height="360" Width="360" Background="#4e5357" Margin="27,51,607,238">
+            <Image x:Name="ImageViewer1" Height="360" Width="360"/>
         </Border>
 
-        <Border Margin="398,44,43,52" Background="#4e5357">
+        <Border Margin="448,51,36,89" Background="#4e5357">
             <Image x:Name="ImageViewer2"/>
         </Border>
-        <Label Content="Output Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="398,3,0,0"/>
-        <Button Content="RunDLL" HorizontalAlignment="Left" Margin="293,558,0,0" VerticalAlignment="Top" Width="76" Click="onClickRunDLL" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"/>
-        <ComboBox x:Name="ComboBox" HorizontalAlignment="Left" Margin="121,558,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="OnComboSelectionChanged" RenderTransformOrigin="0.488,0.708">
+        <Label Content="Output Image" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="448,10,0,0"/>
+        <Button Content="RunDLL" HorizontalAlignment="Left" Margin="209,588,0,0" VerticalAlignment="Top" Width="76" Click="onClickRunDLL" FontSize="15" FontWeight="Bold" Background="#d6dadd" Foreground="#464b4f"/>
+        <ComboBox x:Name="ComboBox" HorizontalAlignment="Left" Margin="37,588,0,0" VerticalAlignment="Top" Width="158" SelectionChanged="OnComboSelectionChanged" RenderTransformOrigin="0.488,0.708">
             <ComboBoxItem Content="Assembly procedure"/>
             <ComboBoxItem Content="C++ procedure"/>
         </ComboBox>
-        <Grid Margin="121,413,770,105">
+        <Grid Margin="129,438,762,79">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition  Width="30"/>
                 <ColumnDefinition  Width="30"/>
@@ -44,10 +44,10 @@
             <TextBox PreviewTextInput="PreviewTextInput" Name="Matrix22" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" TextAlignment="Center" Width="30" Height="30" VerticalContentAlignment="Center"/>
         </Grid>
 
-        <Label Content="Filter matrix" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="19,413,0,0"/>
-        <TextBox Name="cpptime" HorizontalAlignment="Left" Height="23" Margin="523,588,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
-        <TextBox Name="asmtime" HorizontalAlignment="Left" Height="23" Margin="787,588,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" TextChanged="asmtime_TextChanged"/>
-        <Label Content="Last C++ Time" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="403,581,0,0"/>
-        <Label Content="Last Asm Time" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="661,581,0,0"/>
+        <Label Content="Filter matrix" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="27,438,0,0"/>
+        <TextBox Name="cpptime" HorizontalAlignment="Left" Height="23" Margin="572,589,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <TextBox Name="asmtime" HorizontalAlignment="Left" Height="23" Margin="836,589,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" TextChanged="asmtime_TextChanged"/>
+        <Label Content="Last C++ Time" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="452,582,0,0"/>
+        <Label Content="Last Asm Time" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#d6dadd" FontSize="15" FontWeight="Bold" Margin="710,582,0,0"/>
     </Grid>
 </Window>
